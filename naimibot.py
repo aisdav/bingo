@@ -40,7 +40,7 @@ async def send_welcome(message: types.Message):
     random_num = []
     participants_list= []
     total_numbers= []
-    await message.reply("Старт игры 🎰\n\nДля записи на игру отправьте свой @user_name и 5 чисел от 1 до 100:")
+    await message.reply("Приглашаю всех на игру 🎉")
 
 
 @dp.message_handler(commands=['bingo'])
@@ -59,8 +59,7 @@ async def start_game(message: types.Message, state: FSMContext):
     random_num
     collecting = True
     # Отправляем сообщение "Открыта запись на игру"
-    await message.reply("Открыта запись на игру. Участвовать могут все участники группы.\n"
-                        "Пожалуйста, отправьте мне свои числа от 1 до 100 через пробел, например: @username 1 2 3 4 5")
+    await message.reply("Старт игры 🎰\n\nДля записи на игру отправьте свой @user_name и 5 чисел от 1 до 100:")
 @dp.message_handler(commands=['roullet'])
 async def start_game(message: types.Message):
     global participants_list,typ,random_num
