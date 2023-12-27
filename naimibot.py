@@ -203,7 +203,7 @@ async def stop_game(message: types.Message):
         await bot.unpin_chat_message(chat_id=message.chat.id)
     except:
         pass
-    await bot.send_message(message.chat.id, "Список закрыт.")
+    await bot.send_message(message.chat.id, "Игра закончена.\nВсем спасибо за участие🏴‍☠")
 @dp.message_handler(lambda message: message.text == "/over" and typ)
 async def over_game(message: types.Message):
     global typ,participants_list,random_num
@@ -217,8 +217,11 @@ async def over_game(message: types.Message):
     global participants_list
     await send_participant_message(message.chat.id)
     participants_list = []
+    try:
+        await bot.unpin_chat_message(chat_id=message.chat.id)
+    except:
+        pass
     await bot.send_message(message.chat.id, "Список закрыт.")
-    await bot.unpin_chat_message(chat_id=message.chat.id)
     pinned_message_id = 0 
 @dp.message_handler(commands=['random'])
 async def generate_random(message: types.Message):
