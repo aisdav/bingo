@@ -10,7 +10,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.utils.markdown import escape_md
 tracemalloc.start()
-API_TOKEN = '5817481564:AAHl7zAYHz2btBCIjLohElB9RnS8E7PaOlA'
+API_TOKEN = '6871615330:AAHepR2mQz-OccsMXDL1sgS8NrTOFxQVqbA'
 ADMIN_ID = '832892390'
 admin_id = [832892390,6427864248,6037168719,5671880832,713104739,1581568237,5224223665]
 
