@@ -40,8 +40,9 @@ async def send_welcome(message: types.Message):
     random_num = []
     participants_list= []
     total_numbers= []
-    await message.reply("Привет! Я бот-рандомайзер для игры в бинго. "
-                        "Добавь меня в группу и используй команду /bingo для начала игры.")
+    await message.reply("Старт игры 🎰
+
+Для записи на игру отправьте свой @user_name и 5 чисел от 1 до 100:")
 
 
 @dp.message_handler(commands=['bingo'])
