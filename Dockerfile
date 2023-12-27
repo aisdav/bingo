@@ -15,4 +15,4 @@ COPY . /app
 RUN pip3 install -r requirements.txt
 
 # Команда для запуска бота
-CMD ["python3", "your_bot_script.py"]
+CMD ["python3", "naimibot.py"]
