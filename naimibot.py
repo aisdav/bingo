@@ -45,8 +45,6 @@ async def send_welcome(message: types.Message):
 
 @dp.message_handler(commands=['bingo'])
 async def start_game(message: types.Message, state: FSMContext):
-    
-    # Проверяем, является ли отправитель администратором
     if message.from_user.id not in admin_id:
         return
     try:
@@ -58,12 +56,10 @@ async def start_game(message: types.Message, state: FSMContext):
     total_numbers = []
     random_num
     collecting = True
-    # Отправляем сообщение "Открыта запись на игру"
     await message.reply("Старт игры 🎰\n\nДля записи на игру отправьте свой @user_name и 5 чисел от 1 до 100:")
 @dp.message_handler(commands=['roullet'])
 async def start_game(message: types.Message):
     global participants_list,typ,random_num
-    # Проверяем, является ли отправитель администратором
     if message.from_user.id not in admin_id:
         return
     try:
@@ -74,7 +70,6 @@ async def start_game(message: types.Message):
     total_numbers = []
     random_num =[]
     typ = True
-    # Отправляем сообщение "Открыта запись на игру"
     await message.reply("Открыта запись на игру. Участвовать могут все участники группы.\n"
                         "Пожалуйста, отправьте мне свой username.Например: @username")
 @dp.message_handler(lambda message: message.text.startswith('@') and typ)
@@ -91,12 +86,9 @@ async def handle_participant_number(message: types.Message):
 async def handle_participants_numbers(message: types.Message):
     global participants_list,collecting
     if collecting== True:
-
-        # Получаем информацию о пользователе
         user_id = message.from_user.id
-        username = message.text.split()[0][1:]  # Извлекаем имя пользователя
+        username = message.text.split()[0][1:]
 
-        # Получаем числа от пользователя
         try:
             parts = message.text.split()
             username = parts[0][1:] if parts[0].startswith('@') else None
@@ -107,21 +99,17 @@ async def handle_participants_numbers(message: types.Message):
         except ValueError:
             await message.reply("Неправильный формат чисел. Пожалуйста, отправьте 5 чисел от 1 до 100.")
             return
-
-        # Добавляем участника в список
         participants_list.append((username, numbers))
 
-        # Обновляем закрепленное сообщение с участниками
         await send_participants_message(message.chat.id)
 async def send_participant_message(chat_id):
     text = "📋Список участников:\n\n"
     for i, username in enumerate(participants_list, start=1):
         text += f"{i} {username}\n"
-        if i < len(participants_list):  # Добавляем символ ➖ между записями, кроме последней
+        if i < len(participants_list):
             text += "➖\n"
     print(participants_list)
     try:
-        # Получаем ID предыдущего закрепленного сообщения
         chat = await bot.get_chat(chat_id)
         pinned_message_id = getattr(chat.pinned_message, 'message_id', None)
 
@@ -137,7 +125,6 @@ async def send_participant_message(chat_id):
                     # Обработка других исключений (если это не ошибка "Message is not modified")
                     print(f"Error: {e}")
         else:
-            # Если нет предыдущего закрепленного сообщения, отправляем новое и закрепляем его
             try:
                 escaped_text = escape_md(text)
                 pinned_message = await bot.send_message(chat_id, escaped_text, parse_mode=ParseMode.MARKDOWN)
@@ -151,13 +138,11 @@ async def send_participants_message(chat_id):
     formatted_text = "📋Список участников:\n\n"
 
     for i, (username, numbers) in enumerate(participants_list, start=1):
-        # Заменяем слеш перед цифрами в каждом числе
         numbers_str = ' '.join(map(lambda x: str(x).replace('/', ''), numbers))
         formatted_text += f"{i} @{username} {numbers_str}\n"
         if i < len(participants_list):  # Добавляем символ ➖ между записями, кроме последней
             formatted_text += "➖\n"
 
-        # Получаем ID предыдущего закрепленного сообщения
     chat = await bot.get_chat(chat_id)
     pinned_message_id = getattr(chat.pinned_message, 'message_id', None)
 
@@ -175,7 +160,6 @@ async def send_participants_message(chat_id):
                 # Обработка других исключений (если это не ошибка "Message is not modified")
                 print(f"Error: {e}")
     else:
-        # Если нет предыдущего закрепленного сообщения, отправляем новое и закрепляем его
         try:
             escaped_text = escape_md(formatted_text)
             print(escaped_text)
@@ -189,7 +173,6 @@ async def send_participants_message(chat_id):
 
 @dp.message_handler(lambda message: message.text == "/stop" and collecting)
 async def stop_game(message: types.Message):
-    # Проверяем, является ли отправитель администратором
     if message.from_user.id not in admin_id:
         return
     global total_numbers,collecting,random_num
@@ -210,10 +193,8 @@ async def over_game(message: types.Message):
     total_numbers = []
     random_num= []
     typ = False
-    # Проверяем, является ли отправитель администратором
     if message.from_user.id not in admin_id:
         return
-    # Сбрасываем список участников и удаляем закрепленное сообщение
     global participants_list
     await send_participant_message(message.chat.id)
     participants_list = []
@@ -226,8 +207,6 @@ async def over_game(message: types.Message):
 @dp.message_handler(commands=['random'])
 async def generate_random(message: types.Message):
     global typ, participants
-
-    # Проверяем, является ли отправитель администратором
     if message.from_user.id not in admin_id:
         return
 
@@ -246,12 +225,9 @@ async def generate_random(message: types.Message):
         await message.answer("Неверный формат команды. Используйте /random start_range end_range.")
         return
 
-    # Генерируем случайные числа в указанном диапазоне
     random_number = random.sample(range(start_range, end_range + 1), 1)
     
     random_num.extend(random_number)
-    # Отправляем результат
-    print(random_num)
     await message.answer(f"🎲 ᴘɪʀᴀᴛᴇs ᴋᴢ ʀᴏᴜʟʟᴇᴛ\n\n" + "\n➖\n".join(map(str, random_num)))
 @dp.message_handler(commands=['number'])
 async def generate_numbers(message: types.Message):
@@ -261,27 +237,21 @@ async def generate_numbers(message: types.Message):
         return
     random_num = []
     try:
-        # Получаем ID предыдущего закрепленного сообщения
         chat = await bot.get_chat(message.chat.id)
         pinned_message_id = getattr(chat.pinned_message, 'message_id', None)
     except Exception as e:
         pass
         pinned_message_id = None
 
-    # Генерируем 5 рандомных чисел от 1 до 100
     random_numbers = random.sample(range(1, 101), 5)
-    # Создаем новый список с добавленными элементами
     new_element = '➖'
     new_list = []
     for item in random_numbers:
         new_list.append(item)
         new_list.append(new_element)
-    # Убираем последний лишний добавленный элемент
     new_list.pop()
     total_numbers.extend(new_list)
     total_numbers.append('\n')
-
-    # Если есть предыдущее закрепленное сообщение, дополняем его
     if pinned_message_id:
         try:
             existing_message = await bot.edit_message_text(chat_id=message.chat.id,
@@ -290,7 +260,6 @@ async def generate_numbers(message: types.Message):
         except Exception as e:
             print(f"Error while editing pinned message: {e}")
     else:
-        # Если нет предыдущего закрепленного сообщения, создаем новое
         try:
             message_text = f"🎰 ᴘɪʀᴀᴛᴇs ᴋᴢ ʙɪɴɢᴏ:\n\n {''.join(map(str, total_numbers))}"
             escaped_text = escape_md(message_text)
